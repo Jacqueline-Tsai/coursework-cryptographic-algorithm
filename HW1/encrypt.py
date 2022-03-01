@@ -40,11 +40,26 @@ def vernam(plaintext, key):
         ciphertext += chr((num1 + num2)%26+65)
     return ciphertext
     
-def rail_fence():
-    return
+def rail_fence(plaintext, key):
+    ciphertext = ""
+    for i in range(0, len(plaintext), 2):
+        ciphertext += plaintext[i].upper()
+    for i in range(1, len(plaintext), 2):
+        ciphertext += plaintext[i].upper()
+    return ciphertext
 
-def row_transposition():
-    return
+def row_transposition(plaintext, key):
+    ciphertext, tmp_key = "", ['' for i in range(len(key))]
+    for i in range(len(key)):
+        tmp_key[int(key[i])-1] = i
+    key = tmp_key
+    
+    rows, columns = (len(plaintext)-1)//len(key)+1, len(key)
+    matrix = [[plaintext[i*columns+j] for j in range(columns)]for i in range(rows)]
+    for col in key:
+        for row in range(rows):
+            ciphertext += matrix[row][col].upper()
+    return ciphertext
 
 if __name__ == '__main__':
     argv = {}
