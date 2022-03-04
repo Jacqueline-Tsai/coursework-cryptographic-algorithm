@@ -34,7 +34,6 @@ def playfair(plaintext, key):
     
 def vernam(plaintext, key):
     ciphertext, key = "", (key+plaintext)[:len(plaintext)]
-    print(22^3, key)
     for i in range(len(plaintext)):
         num1, num2 = ord(plaintext[i])-97, ord(key[i])-97
         ciphertext += chr((num1 + num2)%26+65)
