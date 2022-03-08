@@ -3,7 +3,7 @@ import sys
 def caesar(plaintext, key):
     ciphertext = ""
     for c in plaintext:
-        ciphertext += chr((ord(c)-97+int(key))%26+65)
+        ciphertext += chr((ord(c)-65+int(key))%26+65)
     return ciphertext
 
 def playfair(plaintext, key):
@@ -21,7 +21,7 @@ def playfair(plaintext, key):
     while index < len(plaintext):
         if index+1 == len(plaintext) or plaintext[index] == plaintext[index+1]:
             plaintext = plaintext[:index+1] + "x" + plaintext[index+1:]
-        row1, column1, row2, column2 = key_row_column[ord(plaintext[index])-97][0], key_row_column[ord(plaintext[index])-97][1], key_row_column[ord(plaintext[index+1])-97][0], key_row_column[ord(plaintext[index+1])-97][1]
+        row1, column1, row2, column2 = key_row_column[ord(plaintext[index])-65][0], key_row_column[ord(plaintext[index])-65][1], key_row_column[ord(plaintext[index+1])-65][0], key_row_column[ord(plaintext[index+1])-65][1]
         if row1 == row2:
             ciphertext += key_matrix[row1][(column1+1)%5] + key_matrix[row2][(column2+1)%5]
         elif column1 == column2:
@@ -35,19 +35,19 @@ def playfair(plaintext, key):
 def vernam(plaintext, key):
     ciphertext, key = "", (key+plaintext)[:len(plaintext)]
     for i in range(len(plaintext)):
-        num1, num2 = ord(plaintext[i])-97, ord(key[i])-97
-        ciphertext += chr((num1 + num2)%26+65)
+        num1, num2 = ord(plaintext[i])-65, ord(key[i])-65
+        ciphertext += chr((num1 ^ num2)%26+65)
     return ciphertext
     
-def rail_fence(plaintext, key):
+def railfence(plaintext, key):
     ciphertext = ""
     for i in range(0, len(plaintext), 2):
-        ciphertext += plaintext[i].upper()
+        ciphertext += plaintext[i]
     for i in range(1, len(plaintext), 2):
-        ciphertext += plaintext[i].upper()
+        ciphertext += plaintext[i]
     return ciphertext
 
-def row_transposition(plaintext, key):
+def row(plaintext, key):
     ciphertext, tmp_key = "", ['' for i in range(len(key))]
     for i in range(len(key)):
         tmp_key[int(key[i])-1] = i
@@ -57,7 +57,7 @@ def row_transposition(plaintext, key):
     matrix = [[plaintext[i*columns+j] for j in range(columns)]for i in range(rows)]
     for col in key:
         for row in range(rows):
-            ciphertext += matrix[row][col].upper()
+            ciphertext += matrix[row][col]
     return ciphertext
 
 if __name__ == '__main__':
@@ -65,4 +65,4 @@ if __name__ == '__main__':
     for i in range(2, len(sys.argv), 2):
         argv[sys.argv[i-1][-1]] = sys.argv[i]
     
-    print(locals()[argv['m']](argv['i'], argv['k']))
+    print(locals()[argv['m']](argv['i'].upper(), argv['k'].upper()))
