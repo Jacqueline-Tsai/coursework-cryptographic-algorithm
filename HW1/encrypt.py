@@ -40,11 +40,16 @@ def vernam(plaintext, key):
     return ciphertext
     
 def railfence(plaintext, key):
-    ciphertext = ""
-    for i in range(0, len(plaintext), 2):
-        ciphertext += plaintext[i]
-    for i in range(1, len(plaintext), 2):
-        ciphertext += plaintext[i]
+    ciphertext, ciphertext_list, direction, index = "", ["" for i in range(int(key))], -1, 0
+
+    for c in plaintext:
+        ciphertext_list[index] += c
+        if index==0 or index==int(key)-1:
+            direction = 0-direction
+        index += direction
+    for text in ciphertext_list:
+        ciphertext += text
+    
     return ciphertext
 
 def row(plaintext, key):
