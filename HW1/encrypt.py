@@ -16,11 +16,11 @@ def playfair(plaintext, key):
     key_row_column = [[] for i in range(26)]
     for i in range(25):        
         key_row_column[ord(key[i])-65] = [i//5, i%5]
-
+        
     index = 0
     while index < len(plaintext):
         if index+1 == len(plaintext) or plaintext[index] == plaintext[index+1]:
-            plaintext = plaintext[:index+1] + "x" + plaintext[index+1:]
+            plaintext = plaintext[:index+1] + "X" + plaintext[index+1:]
         row1, column1, row2, column2 = key_row_column[ord(plaintext[index])-65][0], key_row_column[ord(plaintext[index])-65][1], key_row_column[ord(plaintext[index+1])-65][0], key_row_column[ord(plaintext[index+1])-65][1]
         if row1 == row2:
             ciphertext += key_matrix[row1][(column1+1)%5] + key_matrix[row2][(column2+1)%5]
