@@ -35,8 +35,8 @@ def playfair(plaintext, key):
 def vernam(plaintext, key):
     ciphertext, key = "", (key+plaintext)[:len(plaintext)]
     for i in range(len(plaintext)):
-        num1, num2 = ord(plaintext[i])-65, ord(key[i])-65
-        ciphertext += chr((num1 ^ num2)%26+65)
+        num1, num2 = ord(plaintext[i])-64, ord(key[i])-64
+        ciphertext += chr((num1 ^ num2)%26+64)
     return ciphertext
     
 def railfence(plaintext, key):
