@@ -1,4 +1,4 @@
-import sys
+import sys, math
 
 def caesar(plaintext, key):
     ciphertext = ""
@@ -16,7 +16,7 @@ def playfair(plaintext, key):
     key_row_column = [[] for i in range(26)]
     for i in range(25):        
         key_row_column[ord(key[i])-65] = [i//5, i%5]
-        
+
     index = 0
     while index < len(plaintext):
         if index+1 == len(plaintext) or plaintext[index] == plaintext[index+1]:
@@ -58,8 +58,8 @@ def row(plaintext, key):
         tmp_key[int(key[i])-1] = i
     key = tmp_key
     
-    rows, columns = (len(plaintext)-1)//len(key)+1, len(key)
-    matrix = [[plaintext[i*columns+j] for j in range(columns)]for i in range(rows)]
+    rows, columns = math.ceil(len(plaintext)/len(key)), len(key)
+    matrix = [[plaintext[i*columns+j] if i*columns+j<len(plaintext) else "" for j in range(columns)]for i in range(rows)]
     for col in key:
         for row in range(rows):
             ciphertext += matrix[row][col]
