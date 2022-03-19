@@ -11,26 +11,34 @@ def caesar(ciphertext, key):
 def playfair(ciphertext, key):
     plaintext = ''
     key2 = ''
+    key_t = ''
+    keyset = set(key)
+    for i in range(len(key)):
+        if key[i] in keyset:
+            key_t += key[i]
+            keyset.remove(key[i])
+
+
     row_size = 5
     for i in range(26):
-        if not chr(65+i) in key and i != 9:
+        if not chr(65+i) in key_t and i != 9:
             key2 += chr(65+i)
-    key += key2
+    key_t += key2
     dict_key = {}
     for i in range(0,5):
         for j in range(0,5):
-            dict_key[key[i*5+j]] = [i,j]
+            dict_key[key_t[i*5+j]] = [i,j]
     
     for i in range(0, len(ciphertext), 2):
         row_1, col_1 = dict_key[ciphertext[i]][0], dict_key[ciphertext[i]][1]
         if i+1 < len(ciphertext):
             row_2, col_2 = dict_key[ciphertext[i+1]][0], dict_key[ciphertext[i+1]][1]
         if row_1 == row_2:
-            plaintext += key[row_1 * row_size + (col_1 - 1) % row_size] + key[row_2 * row_size + (col_2 - 1) % row_size]
+            plaintext += key_t[row_1 * row_size + (col_1 - 1) % row_size] + key_t[row_2 * row_size + (col_2 - 1) % row_size]
         elif col_1 == col_2:
-            plaintext += key[((row_1 - 1) % row_size) * row_size + col_1] + key[((row_2 - 1) % row_size) * row_size + col_2]
+            plaintext += key_t[((row_1 - 1) % row_size) * row_size + col_1] + key_t[((row_2 - 1) % row_size) * row_size + col_2]
         else:
-            plaintext += key[row_1 * row_size + col_2] + key[row_2 * row_size + col_1] 
+            plaintext += key_t[row_1 * row_size + col_2] + key_t[row_2 * row_size + col_1] 
             
     for i in range(1, len(plaintext)):
         if plaintext[i] == 'X':
@@ -48,9 +56,10 @@ def vernam(ciphertext, key):
     
 
 def railfence(ciphertext, key):
+    key = int(key)
     plaintext = list(range(len(ciphertext)))
     row_len_list = list(range(key))
-    cycle_len = (int(key)-1) * 2
+    cycle_len = (key-1) * 2
     cycles = int(len(ciphertext) / cycle_len)
     remain = len(ciphertext) % cycle_len
     #process full cycle
@@ -94,19 +103,28 @@ def row(ciphertext, key):
     key = str(key)
     plaintext = ''
     rows, cols = (len(ciphertext)-1)//len(key)+1, len(key)
+
+    board_size = rows * cols
+    remain = board_size % len(ciphertext)
+    key_list = []
+    for i in range(remain):
+        key_list.append(int(key[len(key)-1-i]))
+    key_list = sorted(key_list)
+    for i in key_list:
+        ciphertext = ciphertext[:i * rows-1] + '-' + ciphertext[i * rows-1:]
     board = [['' for j in range(cols)]for i in range(rows)]
-    cipherIndex = 0
+
     col_index = 0
     for i in key:
         index = int(i) - 1
         for j in range(rows):
-            if cipherIndex < len(ciphertext):
-                board[j][col_index] = ciphertext[index * rows + j]
+            board[j][col_index] = ciphertext[index * rows + j]
         col_index += 1
-    
+
     for i in range(rows):
         for j in range(cols):
-            plaintext += board[i][j]
+            if board[i][j] != '-':
+                plaintext += board[i][j]
     return plaintext.lower()
 
 

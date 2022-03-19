@@ -8,15 +8,22 @@ def caesar(plaintext, key):
 
 def playfair(plaintext, key):
     key2, ciphertext = "", ""
+    key_t = ''
+    keyset = set(key)
+    for i in range(len(key)):
+        if key[i] in keyset:
+            key_t += key[i]
+            keyset.remove(key[i])
+
     for i in range(26):
-        if not chr(65+i) in key and i != 9:
+        if not chr(65+i) in key_t and i != 9:
             key2 += chr(65+i)
-    key += key2
-    key_matrix = [[key[i*5+j] for j in range(5)]for i in range(5)]
+    key_t += key2
+    key_matrix = [[key_t[i*5+j] for j in range(5)]for i in range(5)]
     key_row_column = [[] for i in range(26)]
     for i in range(25):        
-        key_row_column[ord(key[i])-65] = [i//5, i%5]
-        
+        key_row_column[ord(key_t[i])-65] = [i//5, i%5]
+    
     index = 0
     while index < len(plaintext):
         if index+1 == len(plaintext) or plaintext[index] == plaintext[index+1]:
@@ -35,8 +42,8 @@ def playfair(plaintext, key):
 def vernam(plaintext, key):
     ciphertext, key = "", (key+plaintext)[:len(plaintext)]
     for i in range(len(plaintext)):
-        num1, num2 = ord(plaintext[i])-64, ord(key[i])-64
-        ciphertext += chr((num1 ^ num2)%26+64)
+        num1, num2 = ord(plaintext[i])-65, ord(key[i])-65
+        ciphertext += chr((num1 ^ num2)%26+65)
     return ciphertext
     
 def railfence(plaintext, key):
@@ -51,18 +58,24 @@ def railfence(plaintext, key):
         ciphertext += text
     
     return ciphertext
-
+#fix the fill word problem(start fill from a -> z)
 def row(plaintext, key):
     ciphertext, tmp_key = "", ['' for i in range(len(key))]
     for i in range(len(key)):
         tmp_key[int(key[i])-1] = i
     key = tmp_key
-    
+
     rows, columns = (len(plaintext)-1)//len(key)+1, len(key)
+    mat_size = rows * columns
+
+    for i in range(len(plaintext), mat_size):
+        plaintext += '-'
     matrix = [[plaintext[i*columns+j] for j in range(columns)]for i in range(rows)]
+    
     for col in key:
         for row in range(rows):
-            ciphertext += matrix[row][col]
+            if matrix[row][col] != '-':
+                ciphertext += matrix[row][col]
     return ciphertext
 
 if __name__ == '__main__':
