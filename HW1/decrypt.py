@@ -39,12 +39,19 @@ def playfair(ciphertext, key):
             plaintext += key_t[((row_1 - 1) % row_size) * row_size + col_1] + key_t[((row_2 - 1) % row_size) * row_size + col_2]
         else:
             plaintext += key_t[row_1 * row_size + col_2] + key_t[row_2 * row_size + col_1] 
-            
-    for i in range(1, len(plaintext)):
+    plain = ''
+    plain += plaintext[0]
+    for i in range(1, len(plaintext)-1):
         if plaintext[i] == 'X':
             if i == len(plaintext)-1 or plaintext[i-1] == plaintext[i+1]:
-                plaintext = plaintext[:i] + plaintext[i+1:]
-    return plaintext.lower()
+                continue
+                #plaintext = plaintext[:i] + plaintext[i+1:]
+        else:
+            plain += plaintext[i]
+    if plaintext[len(plaintext)-1] != 'X':
+        plain += plaintext[len(plaintext)-1]
+        
+    return plain.lower()
 
 
 def vernam(ciphertext, key):
