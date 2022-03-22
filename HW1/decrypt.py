@@ -66,7 +66,6 @@ def vernam(ciphertext, key):
             num = ((ord(ciphertext[offset * init_key_len + i])-65)^(ord(key[offset * init_key_len + i])-65)) % 26 + 65
             key += chr(num)
         offset += 1
-    print(key)
 
     for cy, k in zip(ciphertext, key):
         num = ((ord(cy)-65)^(ord(k)-65)) % 26 + 65
