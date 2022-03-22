@@ -62,7 +62,7 @@ def row(plaintext, key):
         tmp_key[int(key[i])-1] = i
     key = tmp_key
     
-    rows, columns = len(key), math.ceil(len(plaintext)/len(key))
+    rows, columns = math.ceil(len(plaintext)/len(key)), len(key)
     matrix = [[plaintext[i*columns+j] if i*columns+j<len(plaintext) else "" for j in range(columns)]for i in range(rows)]
     for col in key:
         for row in range(rows):
