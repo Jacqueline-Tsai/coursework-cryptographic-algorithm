@@ -8,15 +8,27 @@ def caesar(plaintext, key):
 
 def playfair(plaintext, key):
     key2, ciphertext = "", ""
+    key_t = ''
+    keyset = set(key)
+    for i in range(len(key)):
+        if key[i] in keyset:
+            key_t += key[i]
+            keyset.remove(key[i])
+
     for i in range(26):
-        if not chr(65+i) in key and i != 9:
+        if not chr(65+i) in key_t and i != 9:
             key2 += chr(65+i)
-    key += key2
-    key_matrix = [[key[i*5+j] for j in range(5)]for i in range(5)]
+    key_t += key2
+    key_matrix = [[key_t[i*5+j] for j in range(5)]for i in range(5)]
     key_row_column = [[] for i in range(26)]
     for i in range(25):        
+<<<<<<< HEAD
         key_row_column[ord(key[i])-65] = [i//5, i%5]
 
+=======
+        key_row_column[ord(key_t[i])-65] = [i//5, i%5]
+    
+>>>>>>> 5a9168fdd75a314fd6a8072a4d5c54eb951dc5c8
     index = 0
     while index < len(plaintext):
         if index+1 == len(plaintext) or plaintext[index] == plaintext[index+1]:
@@ -51,7 +63,7 @@ def railfence(plaintext, key):
         ciphertext += text
     
     return ciphertext
-
+#fix the fill word problem(start fill from a -> z)
 def row(plaintext, key):
     ciphertext, tmp_key = "", ['' for i in range(len(key))]
     for i in range(len(key)):
@@ -62,7 +74,8 @@ def row(plaintext, key):
     matrix = [[plaintext[i*columns+j] if i*columns+j<len(plaintext) else "" for j in range(columns)]for i in range(rows)]
     for col in key:
         for row in range(rows):
-            ciphertext += matrix[row][col]
+            if matrix[row][col] != '-':
+                ciphertext += matrix[row][col]
     return ciphertext
 
 if __name__ == '__main__':
