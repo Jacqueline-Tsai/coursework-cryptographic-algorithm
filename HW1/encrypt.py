@@ -15,7 +15,6 @@ def playfair(plaintext, key):
     for i in range(26):
         if not chr(65+i) in key and i != 9:
             key += chr(65+i)
-    print(key)
     key_matrix = [[key[i*5+j] for j in range(5)]for i in range(5)]
     key_row_column = [[] for i in range(26)]
     for i in range(25):        
