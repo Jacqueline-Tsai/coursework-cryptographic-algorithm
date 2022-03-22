@@ -56,6 +56,7 @@ def playfair(ciphertext, key):
 
 def vernam(ciphertext, key):
     plaintext = ""
+    key = (key+ciphertext)[:len(ciphertext)]
     for cy, k in zip(ciphertext, key):
         num = ((ord(cy)-65)^(ord(k)-65)) % 26 + 65
         plaintext += chr(num)
