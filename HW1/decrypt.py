@@ -56,7 +56,18 @@ def playfair(ciphertext, key):
 
 def vernam(ciphertext, key):
     plaintext = ""
-    key = (key+ciphertext)[:len(ciphertext)]
+    #get the autokey
+    offset = 0
+    init_key_len = len(key)
+    while len(key) < len(ciphertext):
+        for i in range(init_key_len):
+            if len(key) >= len(ciphertext):
+                break
+            num = ((ord(ciphertext[offset * init_key_len + i])-65)^(ord(key[offset * init_key_len + i])-65)) % 26 + 65
+            key += chr(num)
+        offset += 1
+    print(key)
+
     for cy, k in zip(ciphertext, key):
         num = ((ord(cy)-65)^(ord(k)-65)) % 26 + 65
         plaintext += chr(num)
