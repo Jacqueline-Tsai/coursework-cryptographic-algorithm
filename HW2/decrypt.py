@@ -1,17 +1,17 @@
 import sys, math, arguments
-def IP_transform(input):
+def IP_permutation(input):
     ans = ""
     for i in range(64):
         ans += input[arguments.IP[i]-1]
     return ans
 
-def IP_reverse_transform(input):
+def IP_reverse_permutation(input):
     ans = ""
     for i in range(64):
         ans += input[arguments.IP_reverse[i]-1]
     return ans
 
-def P_transform(input):
+def P_permutation(input):
     ans = ""
     for i in range(32):
         ans += input[arguments.P[i]-1]
@@ -46,14 +46,14 @@ def F(input, key):
     for i in range(8):
         tmp = arguments.S_box[i][int(input[6*i]+input[6*i+5], 2)][int(input[6*i+1:6*i+5], 2)]
         ans += bin(tmp)[2:].zfill(4)
-    ans = P_transform(ans)
+    ans = P_permutation(ans)
     return ans
 
 def data_encryption_standard(input, key):
     input = bin(int(input, 16))[2:].zfill(64)
     key = bin(int(key, 16))[2:].zfill(64)
     keys = generate_keys(key)
-    input = IP_transform(input)
+    input = IP_permutation(input)
     
     left_half, right_half = input[:32], input[32:]
     for i in range(15, -1, -1):#
@@ -63,7 +63,7 @@ def data_encryption_standard(input, key):
         left_half = right_half
         right_half = tmp2
     
-    ans = IP_reverse_transform(right_half + left_half)
+    ans = IP_reverse_permutation(right_half + left_half)
     ans = hex(int(ans, 2))[2:]
     return "0x" + "0"*(16-len(ans)) + ans.upper()
 
