@@ -24,8 +24,8 @@ def generate_keys(key):
     left_half, right_half = tmp[:28], tmp[28:]
     keys = []
     for i in range(16):
-        left_half = left_half[arguments.number_of_shit[i]:] + left_half[:arguments.number_of_shit[i]]
-        right_half = right_half[arguments.number_of_shit[i]:] + right_half[:arguments.number_of_shit[i]]
+        left_half = left_half[arguments.number_of_shift[i]:] + left_half[:arguments.number_of_shift[i]]
+        right_half = right_half[arguments.number_of_shift[i]:] + right_half[:arguments.number_of_shift[i]]
         tmp = left_half + right_half
         tmp_key = ""
         for i in range(48):
