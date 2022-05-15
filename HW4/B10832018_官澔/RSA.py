@@ -13,7 +13,16 @@ prime_table = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,
     757,761,769,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,
     883,887,907,911,919,929,937,941,947,953,967,971,977,983,991,997]
 
-
+def Exp_mod(x, y, n):
+    exp = bin(y)[2:]
+    value = x
+ 
+    for i in range(1, len(exp)):
+        value = pow(value, 2) % n
+        if(exp[i:i+1]=='1'):
+            value = (value*x) % n
+    
+    return value
 
 
 def Produce_nbit_prime(n):
@@ -41,10 +50,10 @@ def Miller_robin_test(n):
     assert(2**exp * even == n-1)
 
     def trialComposite(round_tester):
-        if pow(round_tester, even, n) == 1:
+        if Exp_mod(round_tester, even, n) == 1:
             return False
         for i in range(exp):
-            if pow(round_tester, 2**i * even, n) == n - 1:
+            if Exp_mod(round_tester, 2**i * even, n) == n - 1:
                 return False
         return True
     numberOfRabinTrials = 30
@@ -80,7 +89,7 @@ def Encrypt(plaintext, n, e):
     m = plaintext.encode('ascii')
     plain_num = int.from_bytes(m, byteorder='little')
     
-    cipher = pow( plain_num, e, n )
+    cipher = Exp_mod( plain_num, e, n )
     cipher_bytes = cipher.to_bytes((cipher.bit_length() + 7) // 8, byteorder="little")
     base64_msg = base64.b64encode(cipher_bytes)
     print(str(base64_msg)[2:len(str(base64_msg)) - 1])
@@ -90,7 +99,7 @@ def Decrypt(ciphertext, n, d):
     d = int(d)
     cipher_bytes = base64.b64decode(ciphertext)
     cipher_num = int.from_bytes(cipher_bytes, byteorder='little')
-    plain = pow( cipher_num, d, n)
+    plain = Exp_mod( cipher_num, d, n)
     plain_bytes = plain.to_bytes((plain.bit_length() + 7) // 8, byteorder="little")
     plaintext = plain_bytes.decode('ascii')
     print(plaintext)
@@ -105,8 +114,8 @@ def CRT(ciphertext, p, q, d):
     qinv = pow(q, -1, p)
     cipher_bytes = base64.b64decode(ciphertext)
     cipher_num = int.from_bytes(cipher_bytes, byteorder='little')
-    mp = pow(cipher_num, dp, p)
-    mq = pow(cipher_num, dq, q)
+    mp = Exp_mod(cipher_num, dp, p)
+    mq = Exp_mod(cipher_num, dq, q)
     h = (qinv * (mp - mq)) % p 
     plain = mq + h * q
     plain_bytes = plain.to_bytes((plain.bit_length() + 7) // 8, byteorder="little")
@@ -132,4 +141,4 @@ if __name__ == '__main__':
         Decrypt(args.d[0], args.d[1], args.d[2])
     elif args.CRT != None:
         CRT(args.CRT[0], args.CRT[1], args.CRT[2], args.CRT[3])
-        
+    
